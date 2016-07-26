@@ -8,5 +8,25 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid x:Name="imgGrid"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".33*"/>
+                <ColumnDefinition Width=".33*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height=".18*"/>
+                <RowDefinition Height=".18*"/>
+                <RowDefinition Height=".18*"/>
+            </Grid.RowDefinitions>
+            <!--<Image x:Name="img00" Grid.Row="0" Grid.Column="0"/>
+            <Image x:Name="img01" Grid.Row="0" Grid.Column="1" />
+            <Image x:Name="img10"  Grid.Row="1" Grid.Column="0"/>
+            <Image x:Name="img11"  Grid.Row="1" Grid.Column="1"/>
+            <Image x:Name="img20"  Grid.Row="2" Grid.Column="0"/>
+            <Image x:Name="img21"  Grid.Row="2" Grid.Column="1"/>-->
+
+        </Grid>
+        
     </Grid>
 </Page>

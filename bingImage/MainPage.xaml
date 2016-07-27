@@ -6,27 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-        <Grid x:Name="imgGrid"  >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".33*"/>
-                <ColumnDefinition Width=".33*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height=".18*"/>
-                <RowDefinition Height=".18*"/>
-                <RowDefinition Height=".18*"/>
-            </Grid.RowDefinitions>
-            <!--<Image x:Name="img00" Grid.Row="0" Grid.Column="0"/>
-            <Image x:Name="img01" Grid.Row="0" Grid.Column="1" />
-            <Image x:Name="img10"  Grid.Row="1" Grid.Column="0"/>
-            <Image x:Name="img11"  Grid.Row="1" Grid.Column="1"/>
-            <Image x:Name="img20"  Grid.Row="2" Grid.Column="0"/>
-            <Image x:Name="img21"  Grid.Row="2" Grid.Column="1"/>-->
-
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Bing image of the day" 
+                           Style="{ThemeResource SubtitleTextBlockStyle}"
+                           HorizontalAlignment="Center"/>
+                <Slider x:Name="sldNoOfImages" Margin="10,0,10,-15"
+                        Value="4" Minimum="1" Maximum="8" 
+                        ValueChanged="sldNoOfImages_ValueChanged"/>
+                <TextBlock Text="# of Images" HorizontalAlignment="Center" />
+                <StackPanel x:Name="spImages" Orientation="Vertical"
+                            Margin="10"/>
+            </StackPanel>
         </Grid>
-        
-    </Grid>
+    </ScrollViewer>
 </Page>

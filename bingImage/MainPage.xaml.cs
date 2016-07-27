@@ -25,8 +25,6 @@ using Windows.Data.Json;
 // Displaying Images
 using Windows.UI.Xaml.Media.Imaging;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace bingImage
 {
     /// <summary>
@@ -40,26 +38,16 @@ namespace bingImage
 
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            // Variables
-            int numOfImages = 3;
-            string strRegion = "en-US";
-
-            string strRawJSONString = await getJSONString(numOfImages, strRegion);
-            List<string> lstBingImageURLs = parseJSONString(numOfImages, strRawJSONString);
-        }
-
-
         /* 
          * This Method fetches the JSON string from the BingAPI endpoint and then returns the Raw String to the caller
          * We need to use either void or Task if we use await in the method body.
         */
-        public async Task<string> getJSONString(int _numOfImages, string _strRegion)
+        public async Task<string> getJSONString(int _numOfImages)
         {
-           
-            // We can specify the region and number of images we want for the Bing Image of the Day.
-            string strBingImageURL = string.Format("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n={0}&mkt={1}", _numOfImages, _strRegion);
+
+            // We can specify the region we want for the Bing Image of the Day.
+            string strRegion = "en-US";
+            string strBingImageURL = string.Format("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n={0}&mkt={1}", _numOfImages, strRegion);
             string strJSONString = "";
 
             // Use Windows.Web.Http Namespace as System.Net.Http will be deprecated in future versions.
@@ -78,19 +66,56 @@ namespace bingImage
 
         /*
          * This Method parses the fetched JSON string and retrieves the Image URLs using Microsoft Windows.Data.Json class
-         * Each Url is stored as a separate List item and the list of URLs is returned to the caller  
-         */
+         * Each Url is stored as a separate List item and the list of URLs is returned to the caller .
+        */
         public List<string> parseJSONString(int _numOfImages, string _strRawJSONString)
         {
             List<string> _lstBingImageURLs = new List<string>(_numOfImages);
             JsonObject jsonObject = JsonObject.Parse(_strRawJSONString);
 
-            for(int i=0; i < _numOfImages; i++)
+            for(int i = 0; i < _numOfImages; i++)
             {
                 _lstBingImageURLs.Add( jsonObject["images"].GetArray()[i].GetObject()["url"].GetString() );
             }
 
             return _lstBingImageURLs;
+        }
+
+        /*
+        * This Method takes the list of parsed URLs, converts each URL into a Bitmap Image and then adds the
+        * Bitmap Image into the Stack Panel dynamically to display as an Image Object.
+        */
+        public void displayImages(List<string> _lstBingImageURLs)
+        {
+            // Clear the Stack Panel and start fresh
+            if (spImages != null)
+                spImages.Children.Clear();
+
+            foreach (string url in _lstBingImageURLs)
+            {
+                Image imgbingImage = new Image();
+                var bingURL = "https://www.bing.com" + url;
+                ImageSource imgbingImageSource = new BitmapImage(new Uri(bingURL));
+                imgbingImage.Source = imgbingImageSource;
+                spImages.Children.Add(imgbingImage);
+
+            }
+        }
+
+
+       /*
+        * This Method updates the UI based on the value of the slider
+       */
+        private async void sldNoOfImages_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+           
+            int _numOfImages = Convert.ToInt32( e.NewValue );
+            
+           
+            string strRawJSONString = await getJSONString(_numOfImages);
+            List<string> lstBingImageURLs = parseJSONString(_numOfImages, strRawJSONString);
+            displayImages(lstBingImageURLs);
+
         }
     }
 }

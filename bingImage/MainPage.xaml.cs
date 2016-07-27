@@ -27,9 +27,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace bingImage
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         public MainPage()
@@ -71,23 +68,30 @@ namespace bingImage
         public List<string> parseJSONString(int _numOfImages, string _strRawJSONString)
         {
             List<string> _lstBingImageURLs = new List<string>(_numOfImages);
-            JsonObject jsonObject = JsonObject.Parse(_strRawJSONString);
-
-            for(int i = 0; i < _numOfImages; i++)
+            // JsonObject class implements the IMap interface, which helps in manipulating the name/value pairs like a dictionary
+            JsonObject jsonObject;
+            
+            // JsonObject.TryParse parses the JSON string into a JSON value
+            // TryParse returns a boolean value, indicating success or failure
+            bool boolParsed = JsonObject.TryParse(_strRawJSONString, out jsonObject);
+            if (boolParsed)
             {
-                _lstBingImageURLs.Add( jsonObject["images"].GetArray()[i].GetObject()["url"].GetString() );
+                for (int i = 0; i < _numOfImages; i++)
+                {
+                    _lstBingImageURLs.Add(jsonObject["images"].GetArray()[i].GetObject()["url"].GetString());
+                }
             }
 
             return _lstBingImageURLs;
         }
 
         /*
-        * This Method takes the list of parsed URLs, converts each URL into a Bitmap Image and then adds the
-        * Bitmap Image into the Stack Panel dynamically to display as an Image Object.
+         * This Method takes the list of parsed URLs, converts each URL into a Bitmap Image and then adds the
+         * Bitmap Image into the Stack Panel dynamically to display as an Image Object.
         */
         public void displayImages(List<string> _lstBingImageURLs)
         {
-            // Clear the Stack Panel and start fresh
+            // Clear the Stack Panel and start afresh
             if (spImages != null)
                 spImages.Children.Clear();
 
@@ -110,8 +114,6 @@ namespace bingImage
         {
            
             int _numOfImages = Convert.ToInt32( e.NewValue );
-            
-           
             string strRawJSONString = await getJSONString(_numOfImages);
             List<string> lstBingImageURLs = parseJSONString(_numOfImages, strRawJSONString);
             displayImages(lstBingImageURLs);

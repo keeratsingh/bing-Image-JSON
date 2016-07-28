@@ -19,9 +19,11 @@
                         Value="4" Minimum="1" Maximum="8" 
                         ValueChanged="sldNoOfImages_ValueChanged"/>
                 <TextBlock Text="# of Images" HorizontalAlignment="Center" />
-                
                 <StackPanel x:Name="spImages" Orientation="Vertical"
                             Margin="10"/>
+                    <TextBlock x:Name="txtStatus" 
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

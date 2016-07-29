@@ -14,16 +14,24 @@
                 <TextBlock Text="Bing image of the day" 
                            Style="{ThemeResource SubtitleTextBlockStyle}"
                            HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <RadioButton GroupName="JSONparseMethod" 
+                                 x:Name="rbDataJson"
+                                 Content="Data.Json" IsChecked="True" />
+                    <RadioButton GroupName="JSONparseMethod" 
+                                 x:Name="rbJsonNet"
+                                 Content="Json.Net" />
+                </StackPanel>
                 
-                <Slider x:Name="sldNoOfImages" Margin="10,0,10,-15"
-                        Value="4" Minimum="1" Maximum="8" 
+                <Slider x:Name="sldNoOfImages" Margin="10,-10,10,-15"
+                        Value="1" Minimum="1" Maximum="8" 
                         ValueChanged="sldNoOfImages_ValueChanged"/>
-                <TextBlock Text="# of Images" HorizontalAlignment="Center" />
-                <StackPanel x:Name="spImages" Orientation="Vertical"
-                            Margin="10"/>
-                    <TextBlock x:Name="txtStatus" 
+                <TextBlock x:Name="txtStatus" 
                            Style="{ThemeResource CaptionTextBlockStyle}"
                            HorizontalAlignment="Center"/>
+                <StackPanel x:Name="spImages" Orientation="Vertical"
+                            Margin="10"/>
+                  
             </StackPanel>
         </Grid>
     </ScrollViewer>

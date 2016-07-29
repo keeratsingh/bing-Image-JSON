@@ -1,29 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿/*
+* @author  Keerat Singh
+* @Date    24-Jul-2016
+*/
+
+// Unused default namespaces
+/*using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Navigation;*/
 
+// Default Namespaces
+using System;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+// Displaying Images
+using Windows.UI.Xaml.Media.Imaging;
 // Http Client
 using Windows.Web.Http;
 // Aync tasks
 using System.Threading.Tasks;
-// Parse JSON Bing String
-// using Newtonsoft.Json; // JsonConvert
+// Parse JSON String
 using Windows.Data.Json;
-
-// Displaying Images
-using Windows.UI.Xaml.Media.Imaging;
+using Newtonsoft.Json.Linq;
 
 namespace bingImage
 {
@@ -85,8 +90,40 @@ namespace bingImage
                 }
             }
 
-            // Just reverse the order of the retrieved Images, just to have a better visibility when the number of images change.
-            _lstBingImageURLs.Reverse();
+            // Return the list containing URLs.
+            return _lstBingImageURLs;
+        }
+
+
+        /*
+        * This Method parses the fetched JSON string and retrieves the Image URLs using NewtonSoft Json.Net
+        * Each Url is stored as a separate List item and the list of URLs is returned to the caller.
+       */
+        public List<string> parseJSONString_Newtonsoft(int _numOfImages, string _strRawJSONString)
+        {
+            List<string> _lstBingImageURLs = new List<string>(_numOfImages);
+
+            // -------------------- Method 1 -------------------- //
+            // Parse using LINQ-to-JSON API's JObject explicitly.
+            // We use this method when we don't know the JSON Structure.
+            JObject jResults = JObject.Parse(_strRawJSONString);
+            foreach (var image in jResults["images"])
+            {
+                _lstBingImageURLs.Add((string)image["url"]);
+            }
+
+            /*
+            // -------------------- Method 2 -------------------- //
+            // Parse using DeserializeObject method.
+            // We use this method when we know the JSON Structure ahead of time.
+            for (int i = 0; i < _numOfImages; i++)
+            {
+                // We use dynamic object, as it saves us the trouble of declaring a specific class to hold the JSON object
+                _lstBingImageURLs.Add(Convert.ToString((JsonConvert.DeserializeObject<dynamic>(_strRawJSONString)).images[i].url));
+            }
+            */
+           
+            // Return the list containing URLs.
             return _lstBingImageURLs;
         }
 
@@ -99,6 +136,9 @@ namespace bingImage
             // Clear the Stack Panel in order to avoid duplication and start afresh.
             if (spImages != null)
                 spImages.Children.Clear();
+
+            // Just reverse the order of the retrieved Images, just to have a better visibility when the number of images change.
+            _lstBingImageURLs.Reverse();
 
             foreach (string url in _lstBingImageURLs)
             {
@@ -118,20 +158,35 @@ namespace bingImage
 
 
        /*
-        * This Method updates the UI based on the value of the slider.
+        * This Method updates the UI based on the value of the slider and the type of parsing method selected.
        */
         private async void sldNoOfImages_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            List<string> lstBingImageURLs;
             try
             {
+                // We use Convert.ToInt32 rather than simple cast (int) as it can convert any primitive type to int.
+                // Also Convert.ToInt32 handles conversion better as compared to (int)
                 int _numOfImages = Convert.ToInt32(e.NewValue);
+
                 string strRawJSONString = await getJSONString(_numOfImages);
-                List<string> lstBingImageURLs = parseJSONString(_numOfImages, strRawJSONString);
+                
+                if (rbDataJson.IsChecked == true)
+                {
+                    // Use Windows.Data.Json to parse JSON string.
+                    lstBingImageURLs = parseJSONString_Newtonsoft(_numOfImages, strRawJSONString);
+                }
+                else
+                {
+                    // Use NewtonSoft Json.Net to parse JSON string.
+                    lstBingImageURLs = parseJSONString(_numOfImages, strRawJSONString);
+                }
+
                 displayImages(lstBingImageURLs);
-                txtStatus.Text = "";
+                txtStatus.Text = String.Format("{0} Image(s) retrieved successfully", _numOfImages);
             }
             
-            // Display an exception message
+            // Display a generalized exception message
             catch(Exception ex)
             {
                 txtStatus.Text = ex.Message;

@@ -4,7 +4,7 @@ This C# UWP solution demonstrates the URL retreival after JSON string parsing fr
 Each line of code is well detailed in order to demonstrate the thinking behind using the method and better understanding.  
 
 ## Description
-•	Ability to specify the region and the number of images to retrieve
+•	Ability to specify the region and the number of images to retrieve  
 •	Solution to parseURL from the JSON string retrieved from the Bing API  
 •	Explored native and third-party ways to parse JSON in C# UWP  
 • Demonstrated parsing utilizing JsonObject using Windows.Data.Json  
@@ -21,7 +21,7 @@ Newtonsoft.Json (DeserializeObject<dynamic>)
 ## Bing JSON String
 Given below is a sample JSON string that is retrieved when number of images are set to 2.
 ```json
-{{
+{
   "images": [
     {
       "startdate": "20160728",
@@ -61,5 +61,5 @@ Given below is a sample JSON string that is retrieved when number of images are 
     "walle": "This image is not available to download as wallpaper.",
     "walls": "Download this image. Use of this image is restricted to wallpaper only."
   }
-}}
+}
 ```

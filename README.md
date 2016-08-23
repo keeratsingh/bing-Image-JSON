@@ -18,6 +18,10 @@ Newtonsoft.Json (DeserializeObject<dynamic>)
 ## Screenshots
 ![Alt text](/BIOD.jpg?raw=true "Bing Image of the Day screenshot")
 
+## Blog Post
+Here is a link to the [blog post][blog-link] explaining the source code in detail.
+
+
 ## Bing JSON String
 Given below is a sample JSON string that is retrieved when number of images are set to 2.
 ```json
@@ -63,3 +67,5 @@ Given below is a sample JSON string that is retrieved when number of images are 
   }
 }
 ```
+
+[blog-link]:http://keerats.com/blog/2016/bing-image-api-json-csharp-uwp/
